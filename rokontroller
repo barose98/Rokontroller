@@ -40,6 +40,14 @@ elif [[  $1 == '/' ]];then
 echo
 for val in  ${!commands[@]};do echo "${val} = ${commands[$val]}";done;return 0
 elif [[ $1 == 'q' ]];then exit 0
+elif [[ $1 == 'c' ]];then 
+ROKUIP="<error>"
+while [ $ROKUIP == "<error>" ] || [ -z "$ROKUIP" ];do
+echo
+echo "Enter the Roku IP: "
+read ROKUIP
+echo $ROKUIP>./roku-address
+done
 elif [[ -n $1  ]]; then
 command=$1
 fi
