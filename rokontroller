@@ -49,9 +49,15 @@ elif [[ $1 == 'c' ]];then
 ROKUIP="<error>"
 while [ $ROKUIP == "<error>" ] || [ -z "$ROKUIP" ];do
 echo
-echo "Enter the Roku IP: "
-read ROKUIP
+echo "Current Roku IP: $(cat ./roku-address)"
+echo "Enter the Roku IP: (c to cancel)"
+read IP
+if [[ $IP == 'c' ]];then
+return 0
+elif [[ true ]];then
+ROKUIP=$IP
 echo $ROKUIP>./roku-address
+fi
 done
 elif [[ -n $1  ]]; then
 #Otherwise, do the keypress. 
