@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 roku-keypress(){
-#ROKUIP="$(configure)"
+#Configure the keys for commands. 
 declare -A commands
 commands[m]=volumemute
 commands[o]=volumeup
 commands[k]=volumedown
 commands[h]=home
 commands[s]=select
-commands["<blank>"]=select
+commands[<blank>]=select
+commands["<space>"]=select
+commands["<enter>"]=select
 commands[e]=up
 commands[x]=down
 commands[a]=left
@@ -16,11 +18,10 @@ commands[b]=back
 commands[r]=rev
 commands[f]=fwd
 commands[p]=play
-commands[<blank>]=select
 commands[/]="<list commands>"
-commands[<blank>]=select
-commands[c]="configure roku address"
+commands[c]="<configure roku address>"
 
+#Configure the Roku IP for the first time. 
 ROKUIP="<error>"
 if [[ -e  ./roku-address ]] ;then
 ROKUIP=$(cat ./roku-address)
@@ -30,17 +31,21 @@ echo "Config file doesn't exist."
 while [ $ROKUIP == "<error>" ] || [ -z "$ROKUIP" ];do
 echo "Enter the Roku IP: "
 read ROKUIP
+#Write whatever was entered to the text file. 
 echo $ROKUIP>./roku-address
 done
 fi
-
+#A <space> or <enter> equals "select". 
 if [[ -z $1 ]];then
 command=s
 elif [[  $1 == '/' ]];then
+#List the commands. 
 echo
 for val in  ${!commands[@]};do echo "${val} = ${commands[$val]}";done;return 0
+#quit
 elif [[ $1 == 'q' ]];then exit 0
 elif [[ $1 == 'c' ]];then 
+#reconfigure
 ROKUIP="<error>"
 while [ $ROKUIP == "<error>" ] || [ -z "$ROKUIP" ];do
 echo
@@ -49,6 +54,7 @@ read ROKUIP
 echo $ROKUIP>./roku-address
 done
 elif [[ -n $1  ]]; then
+#Otherwise, do the keypress. 
 command=$1
 fi
 URLBASE="http://${ROKUIP}:8060/keypress"
@@ -60,7 +66,9 @@ curl -d '' $URLBASE/${commands[$command]}
 fi
 fi
 }
+#Show all the commands at the beginning 
 roku-keypress /
+#Infinitely read for one character commands. 
 while true
 do
 echo -n "Enter a command: "
