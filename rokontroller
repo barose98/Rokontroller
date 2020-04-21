@@ -7,6 +7,7 @@ commands[o]=volumeup
 commands[k]=volumedown
 commands[h]=home
 commands[s]=select
+commands[_]=select
 commands[<blank>]=select
 commands["<space>"]=select
 commands["<enter>"]=select
