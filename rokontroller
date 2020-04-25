@@ -20,7 +20,7 @@ commands[r]=rev
 commands[f]=fwd
 commands[p]=play
 commands[/]="<list commands>"
-commands[c]="<configure roku address>"
+commands[\]]="<configure roku address>"
 
 #Configure the Roku IP for the first time. 
 ROKUIP="<error>"
@@ -45,7 +45,7 @@ echo
 for val in  ${!commands[@]};do echo "${val} = ${commands[$val]}";done;return 0
 #quit
 elif [[ $1 == 'q' ]];then exit 0
-elif [[ $1 == 'c' ]];then 
+elif [[ $1 == ']' ]];then 
 #reconfigure
 ROKUIP="<error>"
 while [ $ROKUIP == "<error>" ] || [ -z "$ROKUIP" ];do
