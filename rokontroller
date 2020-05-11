@@ -16,6 +16,7 @@ commands[x]=down
 commands[a]=left
 commands[d]=right
 commands[b]=back
+commands[8]=info
 commands[r]=rev
 commands[f]=fwd
 commands[p]=play
