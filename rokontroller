@@ -1,4 +1,17 @@
 #!/usr/bin/env bash
+enter_text(){
+echo
+echo "The string to send to the Roku($ROKUIP): "
+read s
+
+len=$((${#s}-1))
+for i in $(seq 0 $len);do
+KPURL="http://${ROKUIP}:8060/keypress/lit_"
+key=$(urlencode "${s:i:1}")
+echo $KPURL$key
+curl -d '' $KPURL$key
+done
+}
 roku-keypress(){
 #Configure the keys for commands. 
 declare -A commands
@@ -6,6 +19,7 @@ commands[m]=volumemute
 commands[o]=volumeup
 commands[k]=volumedown
 commands[h]=home
+commands[.]=enter
 commands[s]=select
 commands[_]=select
 commands[<blank>]=select
@@ -17,11 +31,13 @@ commands[a]=left
 commands[d]=right
 commands[b]=back
 commands[8]=info
+commands[0]=backspace
 commands[r]=rev
 commands[f]=fwd
 commands[p]=play
 commands[/]="<list commands>"
 commands[\]]="<configure roku address>"
+commands[v]="<enter some text>"
 
 #Configure the Roku IP for the first time. 
 ROKUIP="<error>"
@@ -37,6 +53,7 @@ read ROKUIP
 echo $ROKUIP>./roku-address
 done
 fi
+
 #A <space> or <enter> equals "select". 
 if [[ -z $1 ]];then
 command=s
@@ -46,6 +63,9 @@ echo
 for val in  ${!commands[@]};do echo "${val} = ${commands[$val]}";done;return 0
 #quit
 elif [[ $1 == 'q' ]];then exit 0
+elif [[ $1 == 'v' ]];then 
+enter_text
+return 0
 elif [[ $1 == ']' ]];then 
 #reconfigure
 ROKUIP="<error>"
