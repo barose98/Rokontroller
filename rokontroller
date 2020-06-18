@@ -88,8 +88,8 @@ fi
 URLBASE="http://${ROKUIP}:8060/keypress"
 if [[ -n $command ]]; then
 if [[ -n ${commands[$command]} ]];then
-echo
-echo $URLBASE/${commands[$command]}
+echo 
+#echo $URLBASE/${commands[$command]}
 curl -d '' $URLBASE/${commands[$command]}
 fi
 fi
@@ -99,7 +99,7 @@ roku-keypress /
 #Infinitely read for one character commands. 
 while true
 do
-echo -n "Enter a command: "
+echo -e -n '\e[1A\e[KEnter a command: '
 read -n 1 comm
 roku-keypress $comm
 done
