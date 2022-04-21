@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+clear
+
+ids=()
+
+#Configure the Roku IP
+[[ -f rokuip ]] && rn=$(cat rokuip) || rn="1.200"
+ROKUIP="192.168.${rn}"
+
+query(){
+appsxml=$(curl --silent http://$ROKUIP:8060/query/apps)
+count=$(echo $appsxml |xmllint --xpath "count(/apps/app)" -)
+
+cat >roku_buttons_launch.xml<<EOF
+<?xml version="1.0" encoding="UTF-8"?>
+
+<subpanel category="roku" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  size="97% 40">
+<items>
+$(for i in $(seq 1 $count); do 
+[[ $i > 5 ]] && exit
+id=$(echo $appsxml |xmllint --xpath "/apps/app[$i]/@id" -)
+id=${id:5:-1}
+name=$(echo $appsxml |xmllint --xpath "/apps/app[$i]/text()" -)
+
+echo '<button brief="P">'
+echo "   <name>$name</name>"
+curl http://$ROKUIP:8060/query/icon/$id >./icons/$id.png
+echo "   <icon>$(pwd)/icons/$id.png</icon>"
+echo "   <command>curl -d '' $ROKUIP:8060/launch/$id</command>"
+
+echo '</button>'
+done)
+
+</items>
+</subpanel>
+EOF
+echo 12
+
+}
+
+[[ -z $1 ]] && appid=$(query) || $appid=$1
+
+req_url="http://$ROKUIP:8060/launch/$appid"
+echo  $req_url
+curl -d '' $req_url
+
+exit

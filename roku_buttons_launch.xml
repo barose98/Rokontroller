@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<subpanel category="roku" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  size="97% 40">
+<items>
+<button brief="P">
+   <name>Netflix</name>
+   <icon>/home/roseba/Projects/SOFT/BASH/Rokontroller/icons/12.png</icon>
+   <command>curl -d '' 192.168.0.200:8060/launch/12</command>
+</button>
+<button brief="P">
+   <name>YouTube TV</name>
+   <icon>/home/roseba/Projects/SOFT/BASH/Rokontroller/icons/195316.png</icon>
+   <command>curl -d '' 192.168.0.200:8060/launch/195316</command>
+</button>
+<button brief="P">
+   <name>Roku Media Player</name>
+   <icon>/home/roseba/Projects/SOFT/BASH/Rokontroller/icons/2213.png</icon>
+   <command>curl -d '' 192.168.0.200:8060/launch/2213</command>
+</button>
+<button brief="P">
+   <name>Prime Video</name>
+   <icon>/home/roseba/Projects/SOFT/BASH/Rokontroller/icons/13.png</icon>
+   <command>curl -d '' 192.168.0.200:8060/launch/13</command>
+</button>
+<button brief="P">
+   <name>YouTube</name>
+   <icon>/home/roseba/Projects/SOFT/BASH/Rokontroller/icons/837.png</icon>
+   <command>curl -d '' 192.168.0.200:8060/launch/837</command>
+</button>
+
+</items>
+</subpanel>

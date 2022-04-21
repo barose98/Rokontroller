@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+cid=${1:-70202589}
+#netflix
+#curl -d '' "http://192.168.0.200:8060/launch/12?contentid=${cid}&mediatype=episode"
+#youtube
+curl -d '' "http://192.168.0.200:8060/launch/837#?contentid=${cid}&mediatype=movie"
+

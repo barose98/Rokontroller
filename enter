@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+enter_text(){
+clear
+#Configure the Roku IP
+[[ -f rokuip ]] && rn=$(cat rokuip)
+ROKUIP="192.168.${rn:-0}"
+
+[[ -z $1 ]] && s=$(zenity --entry --text "The string to send to the Roku($ROKUIP): " )
+[[ -z $s ]] && s="$*"
+len=$((${#s}-1))
+for i in $(seq 0 $len);do
+KPURL="http://${ROKUIP}:8060/keypress/lit_"
+
+key=$(echo "${s:i:1}" |jq -Rr @uri)
+echo $KPURL$key
+curl -d '' $KPURL$key
+sleep .5
+done
+}
+enter_text $1

@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+roku-keypress(){
+#Configure the Roku IP
+[[ -f rokuip ]] && rn=$(cat rokuip) || rn="1.200"
+ROKUIP="192.168.${rn}"
+
+# do the keypress. 
+command="$1"
+
+URLBASE="http://${ROKUIP}:8060/keypress"
+echo $URLBASE/${command}
+[[ -n "$command" ]] && curl -d '' "$URLBASE/$command"
+
+}
+
+roku-keypress "$1"
+

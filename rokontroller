@@ -1,105 +1,26 @@
 #!/usr/bin/env bash
-enter_text(){
-echo
-echo "The string to send to the Roku($ROKUIP): "
-read s
 
-len=$((${#s}-1))
-for i in $(seq 0 $len);do
-KPURL="http://${ROKUIP}:8060/keypress/lit_"
-key=$(urlencode "${s:i:1}")
-echo $KPURL$key
-curl -d '' $KPURL$key
-done
-}
-roku-keypress(){
-#Configure the keys for commands. 
-declare -A commands
-commands[m]=volumemute
-commands[o]=volumeup
-commands[k]=volumedown
-commands[h]=home
-commands[.]=enter
-commands[s]=select
-commands[_]=select
-commands[<blank>]=select
-commands["<space>"]=select
-commands["<enter>"]=select
-commands[e]=up
-commands[x]=down
-commands[a]=left
-commands[d]=right
-commands[b]=back
-commands[8]=info
-commands[0]=backspace
-commands[r]=rev
-commands[f]=fwd
-commands[p]=play
-commands[/]="<list commands>"
-commands[\]]="<configure roku address>"
-commands[v]="<enter some text>"
-
-#Configure the Roku IP for the first time. 
-ROKUIP="<error>"
-if [[ -e  ./roku-address ]] ;then
-ROKUIP=$(cat ./roku-address)
-elif [[ true ]];then
-echo
-echo "Config file doesn't exist."
-while [ $ROKUIP == "<error>" ] || [ -z "$ROKUIP" ];do
-echo "Enter the Roku IP: "
-read ROKUIP
-#Write whatever was entered to the text file. 
-echo $ROKUIP>./roku-address
-done
-fi
-
-#A <space> or <enter> equals "select". 
-if [[ -z $1 ]];then
-command=s
-elif [[  $1 == '/' ]];then
-#List the commands. 
-echo
-for val in  ${!commands[@]};do echo "${val} = ${commands[$val]}";done;return 0
-#quit
-elif [[ $1 == 'q' ]];then exit 0
-elif [[ $1 == 'v' ]];then 
-enter_text
-return 0
-elif [[ $1 == ']' ]];then 
-#reconfigure
-ROKUIP="<error>"
-while [ $ROKUIP == "<error>" ] || [ -z "$ROKUIP" ];do
-echo
-echo "Current Roku IP: $(cat ./roku-address)"
-echo "Enter the Roku IP: (c to cancel)"
-read IP
-if [[ $IP == 'c' ]];then
-return 0
-elif [[ true ]];then
-ROKUIP=$IP
-echo $ROKUIP>./roku-address
-fi
-done
-elif [[ -n $1  ]]; then
-#Otherwise, do the keypress. 
-command=$1
-fi
-URLBASE="http://${ROKUIP}:8060/keypress"
-if [[ -n $command ]]; then
-if [[ -n ${commands[$command]} ]];then
-echo 
-#echo $URLBASE/${commands[$command]}
-curl -d '' $URLBASE/${commands[$command]}
-fi
-fi
-}
-#Show all the commands at the beginning 
-roku-keypress /
 #Infinitely read for one character commands. 
+
 while true
 do
-echo -e -n '\e[1A\e[KEnter a command: '
-read -n 1 comm
-roku-keypress $comm
+#Show all the commands at the beginning 
+./keypress /
+read -n 1 -p  'Enter a command: ' comm
+[[ $comm == 'q' ]] && clear && exit 0
+[[ $comm == ':' ]] && clear && exit 0
+
+#A <space> or <enter> equals "select". 
+if [[ -z $comm ]]; then ./keypress s press
+elif [[ $comm == '[' ]]; then
+echo
+read -n 1 -p "Command to hold: " HELD
+./keypress $HELD down
+elif [[ $comm == ']' ]]; then
+./keypress $HELD up
+unset $HELD
+else
+./keypress "$comm" press
+fi
 done
+

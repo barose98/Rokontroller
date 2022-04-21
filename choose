@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+choose_roku(){
+clear
+read -p "Choose a Roku : 192.168." n
+[[ -z n ]] && exit 0
+[[ n -gt 2 ]] && choose_roku
+r=${n:-0}
+echo -n $r >rokuip
+}
+choose_roku
